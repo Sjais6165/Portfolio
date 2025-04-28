@@ -1,18 +1,21 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Navbar from './Components/Header/Navbar'
 import Home from './Components/Content/Home'
 import About from './Components/Content/About'
 import TechStack from './Components/Content/TechStack'
 import Projects from './Components/Content/Projects'
+import Education from './Components/Content/Education'
+import Certificates from './Components/Content/Certificates'
+import Activities from './Components/Content/Achievements'
 import Contact from './Components/Content/Contact'
 import Footer from './Components/Footer/Footer'
-import { useEffect, useState } from 'react'
 import { BallTriangle } from 'react-loader-spinner'
 import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/react"
 
 function App() {
   const [loading, setLoading] = useState(false)
+  const [activeSection, setActiveSection] = useState('Home')
 
   //for loading screen
   useEffect(() => {
@@ -22,6 +25,28 @@ function App() {
     }, 1500)
   }, [])
 
+  const renderSection = () => {
+    switch(activeSection) {
+      case 'Home':
+        return <Home />;
+      case 'About':
+        return <About />;
+      case 'TechStack':
+        return <TechStack />;
+      case 'Projects':
+        return <Projects />;
+      case 'Education':
+        return <Education />;
+      case 'Certificates':
+        return <Certificates />;
+      case 'Activities':
+        return <Activities />;
+      case 'Contact':
+        return <Contact />;
+      default:
+        return <Home />;
+    }
+  }
 
   return (
     <>
@@ -31,28 +56,21 @@ function App() {
             height={100}
             width={100}
             radius={5}
-            color="#d946ef"
+            color="#0073ff"
             ariaLabel="ball-triangle-loading"
             wrapperStyle={{}}
             wrapperClass=""
             visible={true}
           />
         </div>
-
         :
-
         <>
-          <Navbar />
-          <Home />
-          <About />
-          <TechStack />
-          <Projects />
-          <Contact />
+          <Navbar activeSection={activeSection} setActiveSection={setActiveSection} />
+          {renderSection()}
           <Footer />
           <Analytics />
           <SpeedInsights />
         </>}
-
     </>
   )
 }

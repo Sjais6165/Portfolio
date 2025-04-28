@@ -1,111 +1,100 @@
-import React, { useEffect, useState } from 'react'
-import light from '../../assets/light.png'
-import dark from '../../assets/dark.png'
-import { Link } from 'react-scroll'
-import { FaTimes } from 'react-icons/fa'
-import { CiMenuFries } from 'react-icons/ci'
+import React, { useState } from 'react'
+import { FaBars, FaTimes } from 'react-icons/fa'
+import { BsSun, BsMoon } from 'react-icons/bs'
 
-function Navbar() {
-    const [click, setClick] = useState(false)
-    const [darkMode, setDarkMode] = useState(true);
+const Navbar = ({ activeSection, setActiveSection }) => {
+  const [isOpen, setIsOpen] = useState(false)
+  const [darkMode, setDarkMode] = useState(false)
 
-    const toggleTheme = (event) => {
-        setDarkMode(!darkMode)
-        if (event.target.checked) {
-            document.documentElement.setAttribute('class', 'dark');
-        } else {
-            document.documentElement.removeAttribute('class');
-        }
-    }
+  const navItems = [
+    { name: 'Home', id: 'Home' },
+    { name: 'About', id: 'About' },
+    { name: 'TechStack', id: 'TechStack' },
+    { name: 'Projects', id: 'Projects' },
+    { name: 'Education', id: 'Education' },
+    { name: 'Certificates', id: 'Certificates' },
+    { name: 'Activities', id: 'Activities' },
+    { name: 'Contact', id: 'Contact' },
+  ]
 
-    useEffect(() => {
-        document.documentElement.setAttribute('class', 'dark');
-    }, [])
+  const handleNavClick = (sectionId) => {
+    setActiveSection(sectionId)
+    setIsOpen(false)
+  }
 
-    const handleClick = () => setClick(!click)
-    const navItems = ['Home', 'About', 'TechStack', 'Projects', 'Contact']
+  const toggleTheme = () => {
+    setDarkMode(!darkMode)
+    document.documentElement.classList.toggle('dark')
+  }
 
-
-    const content =
-        <>
-            <div className='lg:hidden block absolute top-16 w-full left-0 right-0 bg-white dark:bg-slate-900 transition '>
-                <ul className='text-center text-xl p-20'>
-                    {navItems.map((item, index) => (
-                        <Link key={index} to={item} spy={true} smooth={true}>
-                            <li className='my-4 py-4 border-b border-slate-800 hover:bg-slate-800 hover:rounded'>{item}</li>
-                        </Link>
-                    ))}
-                    <div>
-                        <label className="relative inline-flex items-center cursor-pointer	">
-                            <input
-                                type="checkbox"
-                                value=""
-                                className="sr-only peer"
-                                onChange={toggleTheme}
-                                checked={darkMode}
-                            />
-                            <div className="w-[49px] h-6 bg-slate-500 rounded-full peer-checked:after:translate-x-6 after:absolute after:top-[2px]  after:left-[2px] after:bg-gray-300 after:rounded-full after:h-5  after:w-5 after:transition-all">
-                                <img src={light} alt="light"
-                                    className="absolute w-4 z-10 m-[4px] text-white " />
-                                <img src={dark} alt="dark"
-                                    className="absolute w-4 z-10 m-[4px] text-white right-0 " />
-                            </div>
-                        </label>
-                    </div>
-                </ul>
+  return (
+    <nav className="fixed top-0 w-full bg-white dark:bg-primary-900 shadow-md z-50 transition-all duration-300">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          <div className="flex-shrink-0">
+            <h1 className="text-2xl font-bold text-primary-700 dark:text-primary-400 glow">
+              Sushmita Jaiswal
+            </h1>
+          </div>
+          <div className="hidden md:block">
+            <div className="ml-10 flex items-center space-x-4">
+              {navItems.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => handleNavClick(item.id)}
+                  className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 nano-button
+                    ${activeSection === item.id
+                      ? 'bg-primary-200 text-white dark:bg-primary-400 border-glow'
+                      : 'text-primary-200 hover:bg-primary-50 dark:text-primary-100 dark:hover:bg-primary-300'
+                    }`}
+                >
+                  {item.name}
+                </button>
+              ))}
+              <button
+                onClick={toggleTheme}
+                className="p-2 rounded-md text-primary-700 hover:bg-primary-100 dark:text-primary-300 dark:hover:bg-primary-800 transition-all duration-300 nano-button"
+              >
+                {darkMode ? <BsSun size={20} /> : <BsMoon size={20} />}
+              </button>
             </div>
-        </>
+          </div>
+          <div className="md:hidden flex items-center">
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-md text-primary-700 hover:bg-primary-100 dark:text-primary-300 dark:hover:bg-primary-800 transition-all duration-300 nano-button mr-2"
+            >
+              {darkMode ? <BsSun size={20} /> : <BsMoon size={20} />}
+            </button>
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="p-2 rounded-md text-primary-700 hover:bg-primary-100 dark:text-primary-300 dark:hover:bg-primary-800 transition-all duration-300 nano-button"
+            >
+              {isOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
+            </button>
+          </div>
+        </div>
+      </div>
 
-
-
-    return (
-        <>
-            <nav className='sticky top-0 bg-white text-black dark:bg-slate-900 dark:text-white'>
-                <div className='h-10vh flex justify-between z-50 lg:py-5 pl-20 pr-14 py-4 border-b border-slate-800'>
-                    <div className='flex items-center flex-1'>
-                        <span className='text-3xl font-bold'>
-                            <Link to='Home' spy={true} smooth={true}>Sushmita Jaiswal</Link>
-                        </span>
-                    </div>
-                    <div className='lg:flex md:flex flex-1 items-center justify-end font-normal hidden'>
-                        <ul className='flex gap-8 text-[18px]'>
-                            {navItems.map((item, index) => (
-                                <Link key={index} to={item} spy={true} smooth={true}>
-                                    <li className='hover:text-fuchsia-600 transition border-b-2 border-slate-900 hover:border-fuchsia-600 cursor-pointer'>{item}</li>
-                                </Link>
-                            ))}
-                            <div>
-                                <label className="relative inline-flex items-center cursor-pointer	">
-                                    <input
-                                        type="checkbox"
-                                        value=""
-                                        className="sr-only peer"
-                                        onChange={toggleTheme}
-                                        checked={darkMode}
-                                    />
-                                    <div className="w-[49px] h-6 bg-slate-500 rounded-full peer-checked:after:translate-x-6 after:absolute after:top-[2px]  after:left-[2px] after:bg-gray-300 after:rounded-full after:h-5  after:w-5 after:transition-all">
-                                        <img src={light} alt="light"
-                                            className="absolute w-4 z-10 m-[4px] text-white " />
-                                        <img src={dark} alt="dark"
-                                            className="absolute w-4 z-10 m-[4px] text-white right-0 " />
-                                    </div>
-                                </label>
-                            </div>
-                        </ul>
-                    </div>
-                    <button
-                        className='block md:hidden transition text-2xl'
-                        onClick={handleClick} >
-                        {click ? <FaTimes /> : <CiMenuFries />}
-                    </button>
-                    <div className='md:hidden'>
-                        {click && content}
-                    </div>
-
-                </div>
-            </nav>
-        </>
-    )
+      <div className={`md:hidden ${isOpen ? 'block' : 'hidden'} transition-all duration-300`}>
+        <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white dark:bg-primary-900 shadow-lg">
+          {navItems.map((item) => (
+            <button
+              key={item.id}
+              onClick={() => handleNavClick(item.id)}
+              className={`w-full text-left px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 nano-button
+                ${activeSection === item.id
+                  ? 'bg-primary-200 text-white dark:bg-primary-400 border-glow'
+                  : 'text-primary-200 hover:bg-primary-50 dark:text-primary-100 dark:hover:bg-primary-300'
+                }`}
+            >
+              {item.name}
+            </button>
+          ))}
+        </div>
+      </div>
+    </nav>
+  )
 }
 
 export default Navbar
