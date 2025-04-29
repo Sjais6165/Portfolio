@@ -25,28 +25,27 @@ function App() {
     }, 1500)
   }, [])
 
-  const renderSection = () => {
-    switch(activeSection) {
-      case 'Home':
-        return <Home />;
-      case 'About':
-        return <About />;
-      case 'TechStack':
-        return <TechStack />;
-      case 'Projects':
-        return <Projects />;
-      case 'Education':
-        return <Education />;
-      case 'Certificates':
-        return <Certificates />;
-      case 'Activities':
-        return <Activities />;
-      case 'Contact':
-        return <Contact />;
-      default:
-        return <Home />;
-    }
-  }
+  // Track active section based on scroll position
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = ['Home', 'About', 'TechStack', 'Projects', 'Education', 'Certificates', 'Activities', 'Contact'];
+      
+      for (const section of sections) {
+        const element = document.getElementById(section);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          // If the section is in view (top is near the top of the viewport)
+          if (rect.top <= 100 && rect.bottom >= 100) {
+            setActiveSection(section);
+            break;
+          }
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
     <>
@@ -66,7 +65,16 @@ function App() {
         :
         <>
           <Navbar activeSection={activeSection} setActiveSection={setActiveSection} />
-          {renderSection()}
+          <div className="pt-16"> {/* Add padding to account for fixed navbar */}
+            <Home />
+            <About />
+            <TechStack />
+            <Projects />
+            <Education />
+            <Certificates />
+            <Activities />
+            <Contact />
+          </div>
           <Footer />
           <Analytics />
           <SpeedInsights />

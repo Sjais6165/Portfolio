@@ -20,6 +20,19 @@ const Navbar = ({ activeSection, setActiveSection }) => {
   const handleNavClick = (sectionId) => {
     setActiveSection(sectionId)
     setIsOpen(false)
+    
+    // Smooth scroll to the section
+    const element = document.getElementById(sectionId)
+    if (element) {
+      const navbarHeight = 64 // Height of the fixed navbar
+      const elementPosition = element.getBoundingClientRect().top
+      const offsetPosition = elementPosition + window.pageYOffset - navbarHeight
+      
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      })
+    }
   }
 
   const toggleTheme = () => {
